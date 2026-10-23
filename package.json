@@ -1,0 +1,58 @@
+{
+  "name": "mcp-hacienda-cr",
+  "version": "0.1.0",
+  "description": "Servidor MCP con datos públicos del Ministerio de Hacienda de Costa Rica: tipo de cambio, contribuyentes, códigos CABYS con IVA y exoneraciones.",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:live": "vitest run --config vitest.live.config.ts",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm test && npm run build",
+    "smoke": "npm run build && node scripts/smoke.mjs"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "costa-rica",
+    "hacienda",
+    "cabys",
+    "facturacion-electronica",
+    "tipo-de-cambio",
+    "claude"
+  ],
+  "author": "Ney Fred Jiménez Campos <neyfred@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.31.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22.18.8",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  },
+  "type": "module",
+  "bin": {
+    "mcp-hacienda-cr": "dist/index.js"
+  },
+  "types": "dist/server.d.ts",
+  "files": [
+    "dist",
+    "!dist/**/*.test.*",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jmnzcn/mcp-hacienda-cr.git"
+  },
+  "homepage": "https://github.com/jmnzcn/mcp-hacienda-cr#readme",
+  "bugs": {
+    "url": "https://github.com/jmnzcn/mcp-hacienda-cr/issues"
+  },
+  "engines": {
+    "node": ">=18.17"
+  }
+}
