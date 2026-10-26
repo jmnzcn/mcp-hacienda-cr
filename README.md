@@ -9,6 +9,10 @@
 
 [English summary](#-english-summary) · [Herramientas](#-herramientas) · [Instalación](#-instalación) · [Cómo funciona](#-cómo-funciona)
 
+![Demo: MCP Inspector llamando a tipo_de_cambio, buscar_cabys y consultar_contribuyente](docs/demo.gif)
+
+<sub>Grabado con [MCP Inspector](https://github.com/modelcontextprotocol/inspector) contra la API real de Hacienda: tipo de cambio de hoy, códigos CABYS de "café tostado" con su IVA y la situación tributaria de la CNFL.</sub>
+
 ---
 
 ## 💬 Qué puedes preguntarle a tu asistente
