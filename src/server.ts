@@ -4,7 +4,7 @@ import { z } from "zod";
 import { HaciendaClient, HaciendaError } from "./hacienda.js";
 
 export const SERVER_NAME = "mcp-hacienda-cr";
-export const SERVER_VERSION = "0.1.0";
+export const SERVER_VERSION = "0.1.1";
 
 const crc = (n: number) =>
   `₡${n.toLocaleString("es-CR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;

@@ -1,6 +1,7 @@
 {
   "name": "mcp-hacienda-cr",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "mcpName": "io.github.jmnzcn/mcp-hacienda-cr",
   "description": "Servidor MCP con datos públicos del Ministerio de Hacienda de Costa Rica: tipo de cambio, contribuyentes, códigos CABYS con IVA y exoneraciones.",
   "main": "dist/server.js",
   "scripts": {
