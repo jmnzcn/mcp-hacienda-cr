@@ -1,0 +1,49 @@
+name: publish-mcp-registry
+
+# Publica server.json en el registro oficial de MCP (registry.modelcontextprotocol.io).
+# Se autentica con OIDC de GitHub Actions: no necesita tokens ni login en el navegador.
+# El paquete de npm se publica antes, a mano (npm publish con 2FA).
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      MCP_PUBLISHER_VERSION: v1.8.4
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Comprobar que la versión de npm ya existe
+        run: |
+          set -euo pipefail
+          version="$(jq -r .version server.json)"
+          if [ "${GITHUB_REF_TYPE}" = "tag" ] && [ "${GITHUB_REF_NAME}" != "v${version}" ]; then
+            echo "El tag ${GITHUB_REF_NAME} no coincide con server.json (v${version})"; exit 1
+          fi
+          npm view "mcp-hacienda-cr@${version}" version
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Descargar y verificar mcp-publisher
+        run: |
+          set -euo pipefail
+          archive="mcp-publisher_linux_amd64.tar.gz"
+          base_url="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}"
+          curl --fail --location --silent --show-error --output "$archive" "$base_url/$archive"
+          curl --fail --location --silent --show-error --output "$archive.sigstore.json" "$base_url/$archive.sigstore.json"
+          cosign verify-blob \
+            --bundle "$archive.sigstore.json" \
+            --certificate-identity "https://github.com/modelcontextprotocol/registry/.github/workflows/release.yml@refs/tags/${MCP_PUBLISHER_VERSION}" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            "$archive"
+          tar xzf "$archive" mcp-publisher
+
+      - run: ./mcp-publisher login github-oidc
+      - run: ./mcp-publisher publish
