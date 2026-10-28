@@ -5,7 +5,7 @@
 [![ci](https://github.com/jmnzcn/mcp-hacienda-cr/actions/workflows/ci.yml/badge.svg)](https://github.com/jmnzcn/mcp-hacienda-cr/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/mcp-hacienda-cr?color=CB3837&logo=npm)](https://www.npmjs.com/package/mcp-hacienda-cr)
 ![MCP](https://img.shields.io/badge/MCP-servidor-6E56CF)
-![License](https://img.shields.io/badge/licencia-MIT-blue)
+![License](https://img.shields.io/badge/licencia-PolyForm%20Noncommercial-orange)
 
 [English summary](#-english-summary) · [Herramientas](#-herramientas) · [Instalación](#-instalación) · [Cómo funciona](#-cómo-funciona)
 
@@ -115,6 +115,12 @@ Los datos provienen de las APIs públicas del Ministerio de Hacienda y son **de 
 
 ---
 
+## 📜 Licencia
+
+**[PolyForm Noncommercial 1.0.0](LICENSE).** Puedes usarlo gratis para fines no comerciales: uso personal, investigación, educación o evaluarlo. **Cualquier uso comercial requiere una licencia comercial:** [neyfred@gmail.com](mailto:neyfred@gmail.com).
+
+Las versiones hasta el commit `438da02` (2026-10-26), incluida la publicada en npm hasta ese momento, se publicaron con licencia MIT.
+
 ## 🇺🇸 English summary
 
 **mcp-hacienda-cr** is a [Model Context Protocol](https://modelcontextprotocol.io) server that lets AI assistants (Claude, Cursor, …) query Costa Rica's Ministry of Finance public APIs: **official exchange rates**, **taxpayer status** (registered, delinquent or non-filer, economic activities), **CABYS product/service codes with their VAT rate**, and **tax exemptions**. It targets e-invoicing, where every invoice line needs a CABYS code and the right VAT rate.
@@ -127,4 +133,4 @@ claude mcp add hacienda-cr -- npx -y mcp-hacienda-cr
 
 ---
 
-**Ney Fred Jiménez Campos** · [LinkedIn](https://www.linkedin.com/in/neyfred/) · [GitHub](https://github.com/jmnzcn) · MIT License
+**Ney Fred Jiménez Campos** · [LinkedIn](https://www.linkedin.com/in/neyfred/) · [GitHub](https://github.com/jmnzcn) · PolyForm Noncommercial · commercial licenses on request
