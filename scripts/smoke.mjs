@@ -17,7 +17,7 @@ const calls = [
   ["consultar_contribuyente", { identificacion: "3-101-000046" }],
   ["buscar_cabys", { descripcion: "café tostado", limite: 3 }],
   ["obtener_cabys", { codigo: "0161001010000" }],
-  ["consultar_exoneracion", { autorizacion: "AL-00020402-24" }],
+  ["consultar_exoneracion", { autorizacion: "AL-00460853-20" }],
   ["validar_factura", { xml: readFileSync("examples/factura-con-errores.xml", "utf8") }],
 ];
 

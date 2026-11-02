@@ -158,7 +158,7 @@ export function createServer(client = new HaciendaClient()): McpServer {
       description:
         "Datos de una exoneración de impuestos registrada en Hacienda a partir de su número de autorización: beneficiario, porcentaje, vigencia y códigos CABYS que cubre.",
       inputSchema: {
-        autorizacion: z.string().min(3).describe('Número de documento de la exoneración. Ej: "AL-00020402-24".'),
+        autorizacion: z.string().min(3).describe('Número de documento de la exoneración. Ej: "AL-00460853-20".'),
       },
       annotations: READ_ONLY,
     },

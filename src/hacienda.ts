@@ -192,7 +192,7 @@ export class HaciendaClient {
     return item ? toCabys(item) : null;
   }
 
-  /** Datos de una exoneración por su número de autorización (ej. "AL-00020402-24"). */
+  /** Datos de una exoneración por su número de autorización (ej. "AL-00460853-20"). */
   async exoneracion(autorizacion: string, hoy = new Date()): Promise<Exoneracion | null> {
     const numero = autorizacion.trim().toUpperCase();
     const data = await this.get<{

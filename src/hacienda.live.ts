@@ -20,7 +20,7 @@ describe("api.hacienda.go.cr (en vivo)", () => {
   });
 
   it("contribuyente inexistente devuelve null", async () => {
-    await expect(client.contribuyente("3101999999")).resolves.toBeNull();
+    await expect(client.contribuyente("3101999998")).resolves.toBeNull();
   });
 
   it("CABYS: buscar y obtener por código", async () => {
@@ -32,7 +32,7 @@ describe("api.hacienda.go.cr (en vivo)", () => {
   });
 
   it("exoneración conocida", async () => {
-    const e = await client.exoneracion("AL-00020402-24");
-    expect(e).toMatchObject({ autorizacion: "AL-00020402-24", porcentaje: 12 });
+    const e = await client.exoneracion("AL-00460853-20");
+    expect(e).toMatchObject({ autorizacion: "AL-00460853-20", porcentaje: 13 });
   });
 });

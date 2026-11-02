@@ -42,7 +42,7 @@ como `io.github.jmnzcn/mcp-hacienda-cr`.
 > - ⚠️ Línea 2 › Impuesto › Tarifa: cobra IVA 13 %, pero el CABYS 0161001010000 (café cereza,
 >   orgánico) tiene 1 %.
 
-También: "¿A cuánto está el dólar hoy?" o "¿La exoneración AL-00020402-24 sigue vigente?". Son
+También: "¿A cuánto está el dólar hoy?" o "¿La exoneración AL-00460853-20 sigue vigente?". Son
 respuestas reales del servidor contra la API de Hacienda.
 
 ## Herramientas
@@ -53,7 +53,7 @@ respuestas reales del servidor contra la API de Hacienda.
 - `buscar_cabys`: busca códigos CABYS por descripción, con su tarifa de IVA. Ejemplo: `café tostado`.
 - `obtener_cabys`: el detalle de un código CABYS, con su IVA y su categoría. Ejemplo: `0161001010000`.
 - `consultar_exoneracion`: beneficiario, porcentaje, vigencia y códigos CABYS que cubre una
-  exoneración. Ejemplo: `AL-00020402-24`.
+  exoneración. Ejemplo: `AL-00460853-20`.
 - `validar_factura`: revisa el XML de un comprobante 4.4, firmado o sin firmar, y explica cada
   problema en español. Ejemplo: [examples/factura-con-errores.xml](examples/factura-con-errores.xml).
 
