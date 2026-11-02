@@ -19,7 +19,7 @@ const text = (res: Awaited<ReturnType<Client["callTool"]>>) =>
   (res.content as { type: string; text: string }[]).map((c) => c.text).join("\n");
 
 describe("servidor MCP", () => {
-  it("expone las 5 herramientas, todas de solo lectura", async () => {
+  it("expone las 6 herramientas, todas de solo lectura", async () => {
     const client = await connect();
     const { tools } = await client.listTools();
 
@@ -29,6 +29,7 @@ describe("servidor MCP", () => {
       "consultar_exoneracion",
       "obtener_cabys",
       "tipo_de_cambio",
+      "validar_factura",
     ]);
     expect(tools.every((t) => t.annotations?.readOnlyHint)).toBe(true);
   });

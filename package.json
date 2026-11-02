@@ -1,8 +1,8 @@
 {
   "name": "mcp-hacienda-cr",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "mcpName": "io.github.jmnzcn/mcp-hacienda-cr",
-  "description": "Servidor MCP con datos públicos del Ministerio de Hacienda de Costa Rica: tipo de cambio, contribuyentes, códigos CABYS con IVA y exoneraciones.",
+  "description": "Servidor MCP con datos públicos del Ministerio de Hacienda de Costa Rica (tipo de cambio, contribuyentes, CABYS con IVA, exoneraciones) y validador de comprobantes electrónicos 4.4.",
   "main": "dist/server.js",
   "scripts": {
     "build": "tsc",
@@ -21,12 +21,17 @@
     "cabys",
     "facturacion-electronica",
     "tipo-de-cambio",
-    "claude"
+    "claude",
+    "xml",
+    "xsd",
+    "factura-electronica-4.4"
   ],
   "author": "Ney Fred Jiménez Campos <neyfred@gmail.com>",
   "license": "PolyForm-Noncommercial-1.0.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.31.0",
+    "fast-xml-parser": "^5.11.2",
+    "xmllint-wasm": "^5.3.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {
@@ -41,6 +46,7 @@
   "types": "dist/server.d.ts",
   "files": [
     "dist",
+    "schemas",
     "!dist/**/*.test.*",
     "README.md",
     "LICENSE"

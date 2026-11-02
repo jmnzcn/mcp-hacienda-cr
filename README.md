@@ -7,8 +7,10 @@
 
 Un servidor MCP que le da a Claude, Cursor y otros asistentes de IA acceso a los datos públicos del
 Ministerio de Hacienda de Costa Rica: el tipo de cambio, la situación tributaria de un contribuyente,
-los códigos CABYS con su tarifa de IVA y las exoneraciones. Lo hice pensando en la facturación
-electrónica, donde cada línea de una factura necesita su código CABYS y el IVA correcto.
+los códigos CABYS con su tarifa de IVA y las exoneraciones. Además valida el XML de una factura
+electrónica 4.4 antes de enviarla: contra el esquema oficial, sus cuentas y los datos de Hacienda. Lo
+hice pensando en la facturación electrónica, donde cada línea de una factura necesita su código CABYS
+y el IVA correcto, y un error se descubre cuando Hacienda rechaza el comprobante.
 
 Está publicado en npm y en el [registro oficial de MCP](https://registry.modelcontextprotocol.io/v0/servers?search=hacienda)
 como `io.github.jmnzcn/mcp-hacienda-cr`.
@@ -31,6 +33,15 @@ como `io.github.jmnzcn/mcp-hacienda-cr`.
 > COMPAÑIA NACIONAL DE FUERZA Y LUZ S.A. · Cédula jurídica · Régimen general · Al día (no morosa ni
 > omisa) · Actividad principal: 3510.0, generación, transmisión y distribución de energía eléctrica.
 
+> "Revisá esta factura antes de que la envíe" (con el XML adjunto)
+>
+> ❌ Factura electrónica tiene 1 error y 1 advertencia.
+> - Esquema oficial 4.4: cumple (validado como borrador, sin firma)
+> - ❌ Resumen › TotalComprobante: dice 26 980,00, pero venta neta + impuesto + otros cargos − IVA
+>   devuelto da 26 880,00 (diferencia 100,00).
+> - ⚠️ Línea 2 › Impuesto › Tarifa: cobra IVA 13 %, pero el CABYS 0161001010000 (café cereza,
+>   orgánico) tiene 1 %.
+
 También: "¿A cuánto está el dólar hoy?" o "¿La exoneración AL-00020402-24 sigue vigente?". Son
 respuestas reales del servidor contra la API de Hacienda.
 
@@ -43,6 +54,8 @@ respuestas reales del servidor contra la API de Hacienda.
 - `obtener_cabys`: el detalle de un código CABYS, con su IVA y su categoría. Ejemplo: `0161001010000`.
 - `consultar_exoneracion`: beneficiario, porcentaje, vigencia y códigos CABYS que cubre una
   exoneración. Ejemplo: `AL-00020402-24`.
+- `validar_factura`: revisa el XML de un comprobante 4.4, firmado o sin firmar, y explica cada
+  problema en español. Ejemplo: [examples/factura-con-errores.xml](examples/factura-con-errores.xml).
 
 Todas son de solo lectura y usan las APIs públicas de Hacienda, así que no hace falta registrarse ni
 tener una API key.
@@ -73,6 +86,30 @@ claude mcp add hacienda-cr -- npx -y mcp-hacienda-cr
 
 En Cursor, VS Code y otros clientes MCP, usá el comando `npx -y mcp-hacienda-cr` con transporte stdio.
 
+## Qué revisa `validar_factura`
+
+Sirve para los ocho tipos de comprobante 4.4: factura, tiquete, notas de crédito y de débito, factura
+de compra, factura de exportación, recibo electrónico de pago y mensaje receptor.
+
+1. **El esquema oficial.** Valida el XML contra los XSD de Hacienda en la revisión vigente desde el 1 de
+   noviembre de 2026 (vienen incluidos; su origen está en [schemas/v4.4/FUENTE.md](schemas/v4.4/FUENTE.md)).
+   Si el comprobante no está firmado, lo valida como borrador y lo avisa. Si usa el espacio de nombres
+   de la versión 4.3, lo dice.
+2. **Las cuentas.** Revisa cada línea y el resumen con las fórmulas que documentan los propios esquemas:
+   cantidad × precio, descuentos, IVA según la tarifa, impuesto neto, total de la línea, gravado +
+   exento + exonerado + no sujeto, venta neta, desglose por tarifa, total del comprobante y medios de
+   pago. Compara al céntimo.
+3. **La clave y el consecutivo.** Comprueba que la clave de 50 posiciones tenga la fecha, la
+   identificación del emisor y el consecutivo del documento, y que el consecutivo sea del tipo de
+   comprobante correcto.
+4. **Los datos de Hacienda.** Comprueba que el emisor y el receptor estén registrados, que la actividad
+   económica sea del emisor, que cada CABYS exista y cobre su IVA, que cada exoneración exista, esté
+   vigente, sea del receptor y cubra el CABYS, y que el tipo de cambio en dólares se parezca al de
+   referencia del día. Si Hacienda no responde, lo avisa sin invalidar el comprobante.
+
+No verifica la firma criptográficamente ni reemplaza la aceptación de Hacienda: es una revisión previa
+para no enviar comprobantes que van a ser rechazados.
+
 ## Cómo funciona
 
 ```mermaid
@@ -92,10 +129,13 @@ o una hora (lo demás) para no saturar la API.
 
 ## Pruebas
 
-Hay 25 pruebas unitarias del cliente y del servidor completo, con un cliente MCP real en memoria y
-respuestas de Hacienda grabadas. Aparte, unas pruebas de contrato llaman a la API real para detectar
+Hay 44 pruebas unitarias del cliente, el validador y el servidor completo, con un cliente MCP real en
+memoria y respuestas de Hacienda grabadas. Las del validador parten de una factura que cuadra y la
+rompen de a un error por vez. Además, el validador se probó con los siete comprobantes de ejemplo de
+[DojoCodingLabs/hacienda-cr](https://github.com/DojoCodingLabs/hacienda-cr), generados por otro
+proyecto: todos pasan. Aparte, unas pruebas de contrato llaman a la API real para detectar
 si Hacienda cambia el formato de sus respuestas, y una prueba de humo levanta el servidor compilado
-por stdio, como lo haría Claude, y llama a las cinco herramientas. El CI corre en Node 18, 20 y 22 en
+por stdio, como lo haría Claude, y llama a las seis herramientas. El CI corre en Node 18, 20 y 22 en
 cada push, y las pruebas contra la API real también cada lunes, para enterarme antes que los usuarios
 si algo cambia.
 
@@ -124,8 +164,10 @@ incluida la 0.1.1 publicada en npm, se publicaron con licencia MIT.
 mcp-hacienda-cr is a [Model Context Protocol](https://modelcontextprotocol.io) server that lets AI
 assistants such as Claude and Cursor query the public APIs of Costa Rica's Ministry of Finance:
 official exchange rates, taxpayer status (registered, delinquent or non-filer, economic activities),
-CABYS product and service codes with their VAT rate, and tax exemptions. It is aimed at e-invoicing,
-where every invoice line needs a CABYS code and the right VAT rate. No API key is needed. It is
+CABYS product and service codes with their VAT rate, and tax exemptions. It also validates a v4.4
+e-invoice XML before it is sent: against the official schemas, its own arithmetic, and Hacienda's data
+(taxpayers, CABYS VAT rates, exemptions), explaining each problem in Spanish. It is aimed at
+e-invoicing, where every invoice line needs a CABYS code and the right VAT rate. No API key is needed. It is
 listed in the official MCP registry and installs with one command:
 
 ```bash

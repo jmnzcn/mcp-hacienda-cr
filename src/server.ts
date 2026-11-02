@@ -1,10 +1,11 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { z } from "zod";
+import { type Nivel, validarComprobante } from "./factura.js";
 import { HaciendaClient, HaciendaError } from "./hacienda.js";
 
 export const SERVER_NAME = "mcp-hacienda-cr";
-export const SERVER_VERSION = "0.1.1";
+export const SERVER_VERSION = "0.2.0";
 
 const crc = (n: number) =>
   `₡${n.toLocaleString("es-CR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -32,7 +33,7 @@ export function createServer(client = new HaciendaClient()): McpServer {
     { name: SERVER_NAME, version: SERVER_VERSION },
     {
       instructions:
-        "Consulta datos públicos del Ministerio de Hacienda de Costa Rica: tipo de cambio, situación tributaria de contribuyentes, códigos CABYS con su IVA y exoneraciones. Útil para facturación electrónica. Los datos vienen de api.hacienda.go.cr y son de referencia: confirma decisiones fiscales con un contador.",
+        "Consulta datos públicos del Ministerio de Hacienda de Costa Rica: tipo de cambio, situación tributaria de contribuyentes, códigos CABYS con su IVA y exoneraciones, y valida el XML de comprobantes electrónicos 4.4 antes de enviarlos a Hacienda. Útil para facturación electrónica. Los datos vienen de api.hacienda.go.cr y son de referencia: confirma decisiones fiscales con un contador.",
     }
   );
 
@@ -175,6 +176,44 @@ export function createServer(client = new HaciendaClient()): McpServer {
             `- Cubre ${e.cabys.length} códigos CABYS`,
           ].join("\n"),
           { encontrado: true, ...e }
+        );
+      })
+  );
+
+  server.registerTool(
+    "validar_factura",
+    {
+      title: "Validar comprobante electrónico",
+      description:
+        "Valida el XML de un comprobante electrónico 4.4 (factura, tiquete, notas de crédito y débito, factura de compra o de exportación, recibo de pago, mensaje receptor) antes de enviarlo a Hacienda: contra el esquema oficial, las cuentas de líneas y totales, la clave y el consecutivo, y con datos de Hacienda (emisor y receptor, actividad económica, CABYS y su IVA, exoneraciones y tipo de cambio). Explica cada problema en español.",
+      inputSchema: {
+        xml: z.string().min(20).describe("El XML completo del comprobante, firmado o sin firmar."),
+        consultar_hacienda: z
+          .boolean()
+          .default(true)
+          .describe("Cruzar los datos con las APIs de Hacienda. Con false, solo revisa el esquema y las cuentas."),
+      },
+      annotations: READ_ONLY,
+    },
+    ({ xml, consultar_hacienda }) =>
+      run(async () => {
+        const r = await validarComprobante(xml, consultar_hacienda ? client : undefined);
+        const cuenta = (nivel: Nivel) => r.hallazgos.filter((x) => x.nivel === nivel).length;
+        const icono: Record<Nivel, string> = { error: "❌", advertencia: "⚠️", info: "ℹ️" };
+        const titulo = r.valido
+          ? `✅ ${r.tipo ?? "Comprobante"} sin errores${cuenta("advertencia") ? `, con ${cuenta("advertencia")} advertencia(s)` : ""}.`
+          : `❌ ${r.tipo ?? "El XML"} tiene ${cuenta("error")} error(es)${cuenta("advertencia") ? ` y ${cuenta("advertencia")} advertencia(s)` : ""}.`;
+        return ok(
+          [
+            titulo,
+            `- Esquema oficial 4.4: ${r.esquemaValido ? "cumple" : "no cumple"}${r.firmado ? "" : " (validado como borrador, sin firma)"}`,
+            ...r.hallazgos.map((x) => `${icono[x.nivel]} ${x.campo}: ${x.mensaje}`),
+            consultar_hacienda ? "" : "No se consultó a Hacienda: emisor, receptor, CABYS y exoneraciones quedaron sin verificar.",
+            "La firma digital no se verifica criptográficamente. Esto es una revisión previa, no la aceptación de Hacienda.",
+          ]
+            .filter(Boolean)
+            .join("\n"),
+          { ...r }
         );
       })
   );

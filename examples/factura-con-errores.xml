@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FacturaElectronica xmlns="https://cdn.comprobanteselectronicos.go.cr/xml-schemas/v4.4/facturaElectronica">
+  <Clave>50602112600310100004600100001010000000001112345678</Clave>
+  <ProveedorSistemas>3101000046</ProveedorSistemas>
+  <CodigoActividadEmisor>351000</CodigoActividadEmisor>
+  <NumeroConsecutivo>00100001010000000001</NumeroConsecutivo>
+  <FechaEmision>2026-11-02T10:00:00-06:00</FechaEmision>
+  <Emisor>
+    <Nombre>COMPAÑIA NACIONAL DE FUERZA Y LUZ SOCIEDAD ANONIMA</Nombre>
+    <Identificacion><Tipo>02</Tipo><Numero>3101000046</Numero></Identificacion>
+    <Ubicacion><Provincia>1</Provincia><Canton>01</Canton><Distrito>01</Distrito><OtrasSenas>San José centro</OtrasSenas></Ubicacion>
+    <CorreoElectronico>facturas@example.com</CorreoElectronico>
+  </Emisor>
+  <Receptor>
+    <Nombre>EMPRESA RECEPTORA</Nombre>
+    <Identificacion><Tipo>02</Tipo><Numero>3101000046</Numero></Identificacion>
+    <CorreoElectronico>compras@example.com</CorreoElectronico>
+  </Receptor>
+  <CondicionVenta>01</CondicionVenta>
+  <DetalleServicio>
+    <LineaDetalle>
+      <NumeroLinea>1</NumeroLinea>
+      <CodigoCABYS>0161001010000</CodigoCABYS>
+      <Cantidad>2</Cantidad>
+      <UnidadMedida>Unid</UnidadMedida>
+      <Detalle>Café cereza orgánico, quintal</Detalle>
+      <PrecioUnitario>1000.00000</PrecioUnitario>
+      <MontoTotal>2000.00000</MontoTotal>
+      <SubTotal>2000.00000</SubTotal>
+      <BaseImponible>2000.00000</BaseImponible>
+      <Impuesto>
+        <Codigo>01</Codigo>
+        <CodigoTarifaIVA>02</CodigoTarifaIVA>
+        <Tarifa>1</Tarifa>
+        <Monto>20.00000</Monto>
+      </Impuesto>
+      <ImpuestoAsumidoEmisorFabrica>0</ImpuestoAsumidoEmisorFabrica>
+      <ImpuestoNeto>20.00000</ImpuestoNeto>
+      <MontoTotalLinea>2020.00000</MontoTotalLinea>
+    </LineaDetalle>
+    <LineaDetalle>
+      <NumeroLinea>2</NumeroLinea>
+      <CodigoCABYS>0161001010000</CodigoCABYS>
+      <Cantidad>5</Cantidad>
+      <UnidadMedida>Unid</UnidadMedida>
+      <Detalle>Café cereza orgánico, saco de 10 kg</Detalle>
+      <PrecioUnitario>4500.00000</PrecioUnitario>
+      <MontoTotal>22500.00000</MontoTotal>
+      <Descuento><MontoDescuento>500.00000</MontoDescuento><CodigoDescuento>07</CodigoDescuento></Descuento>
+      <SubTotal>22000.00000</SubTotal>
+      <BaseImponible>22000.00000</BaseImponible>
+      <Impuesto>
+        <Codigo>01</Codigo>
+        <CodigoTarifaIVA>08</CodigoTarifaIVA>
+        <Tarifa>13</Tarifa>
+        <Monto>2860.00000</Monto>
+      </Impuesto>
+      <ImpuestoAsumidoEmisorFabrica>0</ImpuestoAsumidoEmisorFabrica>
+      <ImpuestoNeto>2860.00000</ImpuestoNeto>
+      <MontoTotalLinea>24860.00000</MontoTotalLinea>
+    </LineaDetalle>
+  </DetalleServicio>
+  <ResumenFactura>
+    <CodigoTipoMoneda><CodigoMoneda>CRC</CodigoMoneda><TipoCambio>1</TipoCambio></CodigoTipoMoneda>
+    <TotalMercanciasGravadas>24500.00000</TotalMercanciasGravadas>
+    <TotalGravado>24500.00000</TotalGravado>
+    <TotalVenta>24500.00000</TotalVenta>
+    <TotalDescuentos>500.00000</TotalDescuentos>
+    <TotalVentaNeta>24000.00000</TotalVentaNeta>
+    <TotalDesgloseImpuesto><Codigo>01</Codigo><CodigoTarifaIVA>02</CodigoTarifaIVA><TotalMontoImpuesto>20.00000</TotalMontoImpuesto></TotalDesgloseImpuesto>
+    <TotalDesgloseImpuesto><Codigo>01</Codigo><CodigoTarifaIVA>08</CodigoTarifaIVA><TotalMontoImpuesto>2860.00000</TotalMontoImpuesto></TotalDesgloseImpuesto>
+    <TotalImpuesto>2880.00000</TotalImpuesto>
+    <MedioPago><TipoMedioPago>01</TipoMedioPago></MedioPago>
+    <TotalComprobante>26980.00000</TotalComprobante>
+  </ResumenFactura>
+</FacturaElectronica>

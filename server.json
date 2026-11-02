@@ -2,17 +2,17 @@
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.jmnzcn/mcp-hacienda-cr",
   "title": "Hacienda Costa Rica",
-  "description": "Hacienda de Costa Rica: tipo de cambio, contribuyentes, códigos CABYS con IVA y exoneraciones.",
+  "description": "Hacienda de Costa Rica: tipo de cambio, contribuyentes, CABYS con IVA, exoneraciones y validación de facturas electrónicas 4.4.",
   "repository": {
     "url": "https://github.com/jmnzcn/mcp-hacienda-cr",
     "source": "github"
   },
-  "version": "0.1.1",
+  "version": "0.2.0",
   "packages": [
     {
       "registryType": "npm",
       "identifier": "mcp-hacienda-cr",
-      "version": "0.1.1",
+      "version": "0.2.0",
       "transport": {
         "type": "stdio"
       }

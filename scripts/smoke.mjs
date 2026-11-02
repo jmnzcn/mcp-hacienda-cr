@@ -3,6 +3,7 @@
 // Uso: npm run build && node scripts/smoke.mjs
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { readFileSync } from "node:fs";
 
 const transport = new StdioClientTransport({ command: process.execPath, args: ["dist/index.js"] });
 const client = new Client({ name: "smoke-test", version: "1.0.0" });
@@ -17,6 +18,7 @@ const calls = [
   ["buscar_cabys", { descripcion: "café tostado", limite: 3 }],
   ["obtener_cabys", { codigo: "0161001010000" }],
   ["consultar_exoneracion", { autorizacion: "AL-00020402-24" }],
+  ["validar_factura", { xml: readFileSync("examples/factura-con-errores.xml", "utf8") }],
 ];
 
 let failed = 0;
